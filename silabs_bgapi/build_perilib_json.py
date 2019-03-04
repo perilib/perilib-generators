@@ -52,13 +52,23 @@ for technology in api:
         if "command" in class_def:
             print("        commands:")
 
+            # add dictionary key for this class ID in the command set
+            if class_id not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]:
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id] = OrderedDict()
+
+            # add/update relevant class details
+            json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id]["name"] = class_def["@name"]
+
             for command_def in class_def["command"]:
                 command_id = command_def["@index"]
+                command_def_json = OrderedDict({ "name": command_def["@name"] })
 
                 # identify command parameters
                 if command_def["params"] is None:
+                    command_def_json["command_args"] = []
                     param_str = ""
                 else:
+                    command_def_json["command_args"] = [OrderedDict({ "name": param["@name"], "type": param["@type"] }) for param in command_def["params"]["param"]]
                     param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in command_def["params"]["param"]])
                 print("            %s/%s: %s_cmd_%s_%s(%s)" % (
                         class_id,
@@ -70,8 +80,10 @@ for technology in api:
                 # identify response parameters, if any
                 if "returns" in command_def:
                     if command_def["returns"] is None:
+                        command_def_json["response_args"] = []
                         param_str = ""
                     else:
+                        command_def_json["response_args"] = [OrderedDict({ "name": param["@name"], "type": param["@type"] }) for param in command_def["returns"]["param"]]
                         param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in command_def["returns"]["param"]])
                     print("            %s/%s: %s_rsp_%s_%s(%s)" % (
                             class_id,
@@ -81,18 +93,31 @@ for technology in api:
                             param_str))
                 else:
                     print("            %d/%d: NOTE: COMMAND HAS NO RESPONSE" % (int(class_def["@index"]), int(command_def["@index"])))
+                    
+                # add/update command definition in JSON structure
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id][command_id] = command_def_json
 
         # step through each event in this class, if any
         if "event" in class_def:
             print("        events:")
 
+            # add dictionary key for this class ID in the event set
+            if class_id not in json_definition["protocols"][id_map[technology]]["packets"]["events"]:
+                json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id] = OrderedDict()
+
+            # add/update relevant class details
+            json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id]["name"] = class_def["@name"]
+
             for event_def in class_def["event"]:
                 event_id = event_def["@index"]
+                event_def_json = OrderedDict({ "name": event_def["@name"] })
 
                 # identify command parameters
                 if event_def["params"] is None:
+                    event_def_json["event_args"] = []
                     param_str = ""
                 else:
+                    event_def_json["event_args"] = [OrderedDict({ "name": param["@name"], "type": param["@type"] }) for param in event_def["params"]["param"]]
                     param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in event_def["params"]["param"]])
                 print("            %s/%s: %s_evt_%s_%s(%s)" % (
                         class_id,
@@ -100,6 +125,9 @@ for technology in api:
                         technology, class_def["@name"],
                         event_def["@name"],
                         param_str))
+                        
+                # add/update command definition in JSON structure
+                json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id][event_id] = event_def_json
 
 with open("../../perilib-definitions/silabs_bgapi.json", "w") as f:
     json.dump(json_definition, f, indent=4)
