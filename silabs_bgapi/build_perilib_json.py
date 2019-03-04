@@ -1,15 +1,27 @@
 #!/usr/bin/env python3
 
 from collections import OrderedDict
+import json
 import xmltodict
 import pprint
 
 api = OrderedDict()
 
+with open("../../perilib-definitions/silabs_bgapi.json", "r") as f:
+    json_definition = json.load(f, object_pairs_hook=OrderedDict)
+    
 # Bluetooth Low Energy: Bluegiga BLE112, BLE113, BLE121LR
 with open("bleapi.xml", "r") as f:
     api["ble"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
     
+# Bluetooth Low Energy (no mesh): Silicon Labs Blue Gecko BGMxxx
+with open("gecko.xml", "r") as f:
+    api["gecko"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
+
+# Bluetooth Smart Ready: Bluegiga BT121
+with open("dumoapi.xml", "r") as f:
+    api["dumo"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
+
 # Wi-Fi: Bluegiga WF121
 with open("wifiapi-wf121.xml", "r") as f:
     api["wifi121"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
@@ -18,13 +30,14 @@ with open("wifiapi-wf121.xml", "r") as f:
 with open("wifiapi-wgm110.xml", "r") as f:
     api["wifi110"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
     
-# Bluetooth Smart Ready: Bluegiga BT121
-with open("dumoapi.xml", "r") as f:
-    api["dumo"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
-
-# Bluetooth Low Energy (no mesh): Silicon Labs Blue Gecko BGMxxx
-with open("gecko.xml", "r") as f:
-    api["gecko"] = xmltodict.parse(f.read(), force_list=['class', 'command', 'event', 'param'])
+# protocol ID mapping
+id_map = {
+    "ble": "silabs-bgapi-ble-ble1xx",
+    "gecko": "silabs-bgapi-ble-gecko",
+    "dumo": "silabs-bgapi-dumo-bt121",
+    "wifi121": "silabs-bgapi-wifi-wf121",
+    "wifi110": "silabs-bgapi-wifi-wgm110",
+}
 
 # step through each API definition
 for technology in api:
@@ -87,3 +100,6 @@ for technology in api:
                         technology, class_def["@name"],
                         event_def["@name"],
                         param_str))
+
+with open("../../perilib-definitions/silabs_bgapi.json", "w") as f:
+    json.dump(json_definition, f, indent=4)
