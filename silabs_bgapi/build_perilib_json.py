@@ -7,6 +7,7 @@ import pprint
 
 api = OrderedDict()
 
+# read original definitions from file
 with open("../../perilib-definitions/silabs_bgapi.json", "r") as f:
     json_definition = json.load(f, object_pairs_hook=OrderedDict)
     
@@ -112,7 +113,7 @@ for technology in api:
                 event_id = event_def["@index"]
                 event_def_json = OrderedDict({ "name": event_def["@name"] })
 
-                # identify command parameters
+                # identify event parameters
                 if event_def["params"] is None:
                     event_def_json["event_args"] = []
                     param_str = ""
@@ -129,5 +130,6 @@ for technology in api:
                 # add/update command definition in JSON structure
                 json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id][event_id] = event_def_json
 
+# write modified definitions back into file
 with open("../../perilib-definitions/silabs_bgapi.json", "w") as f:
     json.dump(json_definition, f, indent=4)
