@@ -24,10 +24,10 @@ for group_def in api["groups"]:
 
         # add dictionary key for this class ID in the command set
         if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]:
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"][group_id] = OrderedDict()
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id] = OrderedDict()
 
         # add/update relevant class details
-        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"][group_id]["name"] = group_def["name"]
+        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id]["name"] = group_def["name"]
 
         for command_def in group_def["commands"]:
             command_id = command_def["id"]
@@ -65,7 +65,7 @@ for group_def in api["groups"]:
                 print("            %d/%d: NOTE: COMMAND HAS NO RESPONSE" % (int(group_def["id"]), int(command_def["id"])))
                 
             # add/update command definition in JSON structure
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"][group_id][command_id] = command_def_json
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id] = command_def_json
 
     # step through each event in this class, if any
     if "events" in group_def:
@@ -73,10 +73,10 @@ for group_def in api["groups"]:
 
         # add dictionary key for this class ID in the event set
         if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]:
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"][group_id] = OrderedDict()
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id] = OrderedDict()
 
         # add/update relevant class details
-        json_definition["protocols"]["cypress-ezserial"]["packets"]["events"][group_id]["name"] = group_def["name"]
+        json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id]["name"] = group_def["name"]
 
         for event_def in group_def["events"]:
             event_id = event_def["id"]
@@ -97,7 +97,7 @@ for group_def in api["groups"]:
                     param_str))
                     
             # add/update command definition in JSON structure
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"][group_id][event_id] = event_def_json
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id] = event_def_json
 
 # write modified definitions back into file
 with open("../../perilib-definitions/cypress_ezserial.json", "w") as f:

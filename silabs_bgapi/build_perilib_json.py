@@ -54,10 +54,10 @@ for technology in api:
 
             # add dictionary key for this class ID in the command set
             if class_id not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]:
-                json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id] = OrderedDict()
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id] = OrderedDict()
 
             # add/update relevant class details
-            json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id]["name"] = class_def["@name"]
+            json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id]["name"] = class_def["@name"]
 
             for command_def in class_def["command"]:
                 command_id = command_def["@index"]
@@ -95,7 +95,7 @@ for technology in api:
                     print("            %d/%d: NOTE: COMMAND HAS NO RESPONSE" % (int(class_def["@index"]), int(command_def["@index"])))
                     
                 # add/update command definition in JSON structure
-                json_definition["protocols"][id_map[technology]]["packets"]["commands"][class_id][command_id] = command_def_json
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id] = command_def_json
 
         # step through each event in this class, if any
         if "event" in class_def:
@@ -103,10 +103,10 @@ for technology in api:
 
             # add dictionary key for this class ID in the event set
             if class_id not in json_definition["protocols"][id_map[technology]]["packets"]["events"]:
-                json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id] = OrderedDict()
+                json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id] = OrderedDict()
 
             # add/update relevant class details
-            json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id]["name"] = class_def["@name"]
+            json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id]["name"] = class_def["@name"]
 
             for event_def in class_def["event"]:
                 event_id = event_def["@index"]
@@ -127,7 +127,7 @@ for technology in api:
                         param_str))
                         
                 # add/update command definition in JSON structure
-                json_definition["protocols"][id_map[technology]]["packets"]["events"][class_id][event_id] = event_def_json
+                json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id] = event_def_json
 
 # write modified definitions back into file
 with open("../../perilib-definitions/silabs_bgapi.json", "w") as f:
