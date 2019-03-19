@@ -31,7 +31,15 @@ for group_def in api["groups"]:
 
         for command_def in group_def["commands"]:
             command_id = command_def["id"]
-            command_def_json = OrderedDict({ "name": command_def["name"] })
+            if command_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id]:
+                # event does not exist in definition
+                command_def_json = OrderedDict()
+            else:
+                # event exists in definition
+                command_def_json = json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]
+
+            # update name
+            command_def_json["name"] = command_def["name"]
 
             # identify command parameters
             if command_def["parameters"] is None:
@@ -80,7 +88,15 @@ for group_def in api["groups"]:
 
         for event_def in group_def["events"]:
             event_id = event_def["id"]
-            event_def_json = OrderedDict({ "name": event_def["name"] })
+            if event_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id]:
+                # event does not exist in definition
+                event_def_json = OrderedDict()
+            else:
+                # event exists in definition
+                event_def_json = json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]
+
+            # update name
+            event_def_json["name"] = event_def["name"]
 
             # identify event parameters
             if event_def["parameters"] is None:

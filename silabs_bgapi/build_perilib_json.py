@@ -61,7 +61,15 @@ for technology in api:
 
             for command_def in class_def["command"]:
                 command_id = command_def["@index"]
-                command_def_json = OrderedDict({ "name": command_def["@name"] })
+                if command_id not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id]:
+                    # event does not exist in definition
+                    command_def_json = OrderedDict()
+                else:
+                    # event exists in definition
+                    command_def_json = json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]
+
+                # update name
+                command_def_json["name"] = command_def["name"]
 
                 # identify command parameters
                 if command_def["params"] is None:
@@ -110,7 +118,15 @@ for technology in api:
 
             for event_def in class_def["event"]:
                 event_id = event_def["@index"]
-                event_def_json = OrderedDict({ "name": event_def["@name"] })
+                if event_id not in json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id]:
+                    # event does not exist in definition
+                    event_def_json = OrderedDict()
+                else:
+                    # event exists in definition
+                    event_def_json = json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]
+
+                # update name
+                event_def_json["name"] = event_def["name"]
 
                 # identify event parameters
                 if event_def["params"] is None:
