@@ -69,7 +69,7 @@ for technology in api:
                     command_def_json = json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]
 
                 # update name
-                command_def_json["name"] = command_def["name"]
+                command_def_json["name"] = command_def["@name"]
 
                 # identify command parameters
                 if command_def["params"] is None:
@@ -126,7 +126,7 @@ for technology in api:
                     event_def_json = json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]
 
                 # update name
-                event_def_json["name"] = event_def["name"]
+                event_def_json["name"] = event_def["@name"]
 
                 # identify event parameters
                 if event_def["params"] is None:
