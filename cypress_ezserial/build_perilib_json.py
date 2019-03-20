@@ -46,7 +46,11 @@ for group_def in api["groups"]:
                 command_def_json["command_args"] = []
                 param_str = ""
             else:
-                command_def_json["command_args"] = [OrderedDict({ "name": param["name"], "type": param["type"] }) for param in command_def["parameters"]]
+                if "command_args" not in command_def_json:
+                    command_def_json["command_args"] = OrderedDict()
+                for param in command_def["parameters"]:
+                    command_def_json["command_args"]["name"] = param["name"]
+                    command_def_json["command_args"]["type"] = param["type"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["parameters"]])
             print("            %s/%s: ezs_cmd_%s_%s(%s)" % (
                     group_id,
@@ -61,7 +65,11 @@ for group_def in api["groups"]:
                     command_def_json["response_args"] = []
                     param_str = ""
                 else:
-                    command_def_json["response_args"] = [OrderedDict({ "name": param["name"], "type": param["type"] }) for param in command_def["returns"]]
+                    if "response_args" not in command_def_json:
+                        command_def_json["response_args"] = OrderedDict()
+                    for param in command_def["returns"]:
+                        command_def_json["response_args"]["name"] = param["name"]
+                        command_def_json["response_args"]["type"] = param["type"]
                     param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["returns"]])
                 print("            %s/%s: ezs_rsp_%s_%s(%s)" % (
                         group_id,
@@ -103,7 +111,11 @@ for group_def in api["groups"]:
                 event_def_json["event_args"] = []
                 param_str = ""
             else:
-                event_def_json["event_args"] = [OrderedDict({ "name": param["name"], "type": param["type"] }) for param in event_def["parameters"]]
+                if "event_args" not in event_def_json:
+                    event_def_json["event_args"] = OrderedDict()
+                for param in event_def["parameters"]:
+                    event_def_json["event_args"]["name"] = param["name"]
+                    event_def_json["event_args"]["type"] = param["type"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in event_def["parameters"]])
             print("            %s/%s: ezs_evt_%s_%s(%s)" % (
                     group_id,
