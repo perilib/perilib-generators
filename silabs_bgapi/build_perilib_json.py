@@ -63,24 +63,24 @@ for technology in api:
                 command_id = command_def["@index"]
                 if command_id not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id]:
                     # event does not exist in definition
-                    command_def_json = OrderedDict()
-                else:
-                    # event exists in definition
-                    command_def_json = json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]
+                    json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id] = OrderedDict()
 
                 # update name
-                command_def_json["name"] = command_def["@name"]
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["name"] = command_def["@name"]
 
                 # identify command parameters
                 if command_def["params"] is None:
-                    command_def_json["command_args"] = []
+                    json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"] = []
                     param_str = ""
                 else:
-                    if "command_args" not in command_def_json:
-                        command_def_json["command_args"] = OrderedDict()
-                    for param in command_def["params"]["param"]:
-                        command_def_json["command_args"]["name"] = param["@name"]
-                        command_def_json["command_args"]["type"] = param["@type"]
+                    if "command_args" not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]:
+                        json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"] = []
+                    for index, param in enumerate(command_def["params"]["param"]):
+                        if len(json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"]) == index:
+                            # argument does not exist in list
+                            json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"].append(OrderedDict())
+                        json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"][index]["name"] = param["@name"]
+                        json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["command_args"][index]["type"] = param["@type"]
                     param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in command_def["params"]["param"]])
                 print("            %s/%s: %s_cmd_%s_%s(%s)" % (
                         class_id,
@@ -92,14 +92,17 @@ for technology in api:
                 # identify response parameters, if any
                 if "returns" in command_def:
                     if command_def["returns"] is None:
-                        command_def_json["response_args"] = []
+                        json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"] = []
                         param_str = ""
                     else:
-                        if "response_args" not in command_def_json:
-                            command_def_json["response_args"] = OrderedDict()
-                        for param in command_def["returns"]["param"]:
-                            command_def_json["response_args"]["name"] = param["@name"]
-                            command_def_json["response_args"]["type"] = param["@type"]
+                        if "response_args" not in json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]:
+                            json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"] = []
+                        for index, param in enumerate(command_def["returns"]["param"]):
+                            if len(json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"]) == index:
+                                # argument does not exist in list
+                                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"].append(OrderedDict())
+                            json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"][index]["name"] = param["@name"]
+                            json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]["response_args"][index]["type"] = param["@type"]
                         param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in command_def["returns"]["param"]])
                     print("            %s/%s: %s_rsp_%s_%s(%s)" % (
                             class_id,
@@ -111,7 +114,7 @@ for technology in api:
                     print("            %d/%d: NOTE: COMMAND HAS NO RESPONSE" % (int(class_def["@index"]), int(command_def["@index"])))
                     
                 # add/update command definition in JSON structure
-                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id] = command_def_json
+                json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id] = json_definition["protocols"][id_map[technology]]["packets"]["commands"]["entities"][class_id][command_id]
 
         # step through each event in this class, if any
         if "event" in class_def:
@@ -128,24 +131,24 @@ for technology in api:
                 event_id = event_def["@index"]
                 if event_id not in json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id]:
                     # event does not exist in definition
-                    event_def_json = OrderedDict()
-                else:
-                    # event exists in definition
-                    event_def_json = json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]
+                    json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id] = OrderedDict()
 
                 # update name
-                event_def_json["name"] = event_def["@name"]
+                json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["name"] = event_def["@name"]
 
                 # identify event parameters
                 if event_def["params"] is None:
-                    event_def_json["event_args"] = []
+                    json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"] = []
                     param_str = ""
                 else:
-                    if "event_args" not in event_def_json:
-                        event_def_json["event_args"] = OrderedDict()
-                    for param in event_def["params"]["param"]:
-                        event_def_json["event_args"]["name"] = param["@name"]
-                        event_def_json["event_args"]["type"] = param["@type"]
+                    if "event_args" not in json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]:
+                        json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"] = []
+                    for index, param in enumerate(event_def["params"]["param"]):
+                        if len(json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"]) == index:
+                            # argument does not exist in list
+                            json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"].append(OrderedDict())
+                        json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"][index]["name"] = param["@name"]
+                        json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id]["event_args"][index]["type"] = param["@type"]
                     param_str = ', '.join(["%s %s" % (param["@type"], param["@name"]) for param in event_def["params"]["param"]])
                 print("            %s/%s: %s_evt_%s_%s(%s)" % (
                         class_id,
@@ -153,10 +156,8 @@ for technology in api:
                         technology, class_def["@name"],
                         event_def["@name"],
                         param_str))
-                        
-                # add/update command definition in JSON structure
-                json_definition["protocols"][id_map[technology]]["packets"]["events"]["entities"][class_id][event_id] = event_def_json
 
 # write modified definitions back into file
 with open("../../perilib-definitions/silabs_bgapi.json", "w") as f:
     json.dump(json_definition, f, indent=4)
+    f.write("\n")

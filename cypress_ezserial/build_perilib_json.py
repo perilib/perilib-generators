@@ -15,42 +15,42 @@ print("EZ-Serial Protocol")
 
 # step through each class
 for group_def in api["groups"]:
-    group_id = group_def["id"]
+    group_id = str(group_def["id"])
     print("    %s: %s" % (group_id, group_def["name"]))
     
-    # step through each command/response pair in this group, if any
+    # step through each /response pair in this group, if any
     if "commands" in group_def:
         print("        commands:")
 
         # add dictionary key for this class ID in the command set
-        if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]:
+        if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"]:
             json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id] = OrderedDict()
 
         # add/update relevant class details
         json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id]["name"] = group_def["name"]
 
         for command_def in group_def["commands"]:
-            command_id = command_def["id"]
+            command_id = str(command_def["id"])
             if command_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id]:
-                # event does not exist in definition
-                command_def_json = OrderedDict()
-            else:
-                # event exists in definition
-                command_def_json = json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]
+                # command does not exist in definition
+                json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id] = OrderedDict()
 
             # update name
-            command_def_json["name"] = command_def["name"]
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["name"] = command_def["name"]
 
             # identify command parameters
             if command_def["parameters"] is None:
-                command_def_json["command_args"] = []
+                json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"] = []
                 param_str = ""
             else:
-                if "command_args" not in command_def_json:
-                    command_def_json["command_args"] = OrderedDict()
-                for param in command_def["parameters"]:
-                    command_def_json["command_args"]["name"] = param["name"]
-                    command_def_json["command_args"]["type"] = param["type"]
+                if "command_args" not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]:
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"] = []
+                for index, param in enumerate(command_def["parameters"]):
+                    if len(json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"]) == index:
+                        # argument does not exist in list
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"].append(OrderedDict())
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["name"] = param["name"]
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["type"] = param["type"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["parameters"]])
             print("            %s/%s: ezs_cmd_%s_%s(%s)" % (
                     group_id,
@@ -62,14 +62,17 @@ for group_def in api["groups"]:
             # identify response parameters, if any
             if "returns" in command_def:
                 if command_def["returns"] is None:
-                    command_def_json["response_args"] = []
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"] = []
                     param_str = ""
                 else:
-                    if "response_args" not in command_def_json:
-                        command_def_json["response_args"] = OrderedDict()
-                    for param in command_def["returns"]:
-                        command_def_json["response_args"]["name"] = param["name"]
-                        command_def_json["response_args"]["type"] = param["type"]
+                    if "response_args" not in json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]:
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"] = []
+                    for index, param in enumerate(command_def["returns"]):
+                        if len(json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"]) == index:
+                            # argument does not exist in list
+                            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"].append(OrderedDict())
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["name"] = param["name"]
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["type"] = param["type"]
                     param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["returns"]])
                 print("            %s/%s: ezs_rsp_%s_%s(%s)" % (
                         group_id,
@@ -80,42 +83,40 @@ for group_def in api["groups"]:
             else:
                 print("            %d/%d: NOTE: COMMAND HAS NO RESPONSE" % (int(group_def["id"]), int(command_def["id"])))
                 
-            # add/update command definition in JSON structure
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id] = command_def_json
-
     # step through each event in this class, if any
     if "events" in group_def:
         print("        events:")
 
         # add dictionary key for this class ID in the event set
-        if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]:
+        if group_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"]:
             json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id] = OrderedDict()
 
         # add/update relevant class details
         json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id]["name"] = group_def["name"]
 
         for event_def in group_def["events"]:
-            event_id = event_def["id"]
+            event_id = str(event_def["id"])
+            print(type(event_id))
             if event_id not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id]:
                 # event does not exist in definition
-                event_def_json = OrderedDict()
-            else:
-                # event exists in definition
-                event_def_json = json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]
+                json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id] = OrderedDict()
 
             # update name
-            event_def_json["name"] = event_def["name"]
+            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["name"] = event_def["name"]
 
             # identify event parameters
             if event_def["parameters"] is None:
-                event_def_json["event_args"] = []
+                json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"] = []
                 param_str = ""
             else:
-                if "event_args" not in event_def_json:
-                    event_def_json["event_args"] = OrderedDict()
-                for param in event_def["parameters"]:
-                    event_def_json["event_args"]["name"] = param["name"]
-                    event_def_json["event_args"]["type"] = param["type"]
+                if "event_args" not in json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]:
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"] = []
+                for index, param in enumerate(event_def["parameters"]):
+                    if len(json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"]) == index:
+                        # argument does not exist in list
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"].append(OrderedDict())
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["name"] = param["name"]
+                    json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["type"] = param["type"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in event_def["parameters"]])
             print("            %s/%s: ezs_evt_%s_%s(%s)" % (
                     group_id,
@@ -123,10 +124,8 @@ for group_def in api["groups"]:
                     group_def["name"],
                     event_def["name"],
                     param_str))
-                    
-            # add/update command definition in JSON structure
-            json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id] = event_def_json
 
 # write modified definitions back into file
 with open("../../perilib-definitions/cypress_ezserial.json", "w") as f:
     json.dump(json_definition, f, indent=4)
+    f.write("\n")
