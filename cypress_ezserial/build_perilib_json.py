@@ -55,6 +55,10 @@ for group_def in api["groups"]:
                         json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["format"] = param["format"]
                     if "shortdesc" in param:
                         json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["shortdesc"] = param["shortdesc"]
+                    if "minimum" in param:
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["minimum"] = param["minimum"]
+                    if "maximum" in param:
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["command_args"][index]["maximum"] = param["maximum"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["parameters"]])
             print("            %s/%s: ezs_cmd_%s_%s(%s)" % (
                     group_id,
@@ -81,6 +85,10 @@ for group_def in api["groups"]:
                             json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["format"] = param["format"]
                         if "shortdesc" in param:
                             json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["shortdesc"] = param["shortdesc"]
+                        if "minimum" in param:
+                            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["minimum"] = param["minimum"]
+                        if "maximum" in param:
+                            json_definition["protocols"]["cypress-ezserial"]["packets"]["commands"]["entities"][group_id][command_id]["response_args"][index]["maximum"] = param["maximum"]
                     param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in command_def["returns"]])
                 print("            %s/%s: ezs_rsp_%s_%s(%s)" % (
                         group_id,
@@ -129,6 +137,10 @@ for group_def in api["groups"]:
                         json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["format"] = param["format"]
                     if "shortdesc" in param:
                         json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["shortdesc"] = param["shortdesc"]
+                    if "minimum" in param:
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["minimum"] = param["minimum"]
+                    if "maximum" in param:
+                        json_definition["protocols"]["cypress-ezserial"]["packets"]["events"]["entities"][group_id][event_id]["event_args"][index]["maximum"] = param["maximum"]
                 param_str = ', '.join(["%s %s" % (param["type"], param["name"]) for param in event_def["parameters"]])
             print("            %s/%s: ezs_evt_%s_%s(%s)" % (
                     group_id,
