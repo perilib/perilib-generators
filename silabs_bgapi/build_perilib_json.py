@@ -32,11 +32,11 @@ with open("wifiapi-wgm110.xml", "r") as f:
     
 # protocol ID mapping
 id_map = {
-    "ble": "silabs-bgapi-ble-ble1xx",
-    "gecko": "silabs-bgapi-ble-gecko",
-    "dumo": "silabs-bgapi-dumo-bt121",
-    "wifi121": "silabs-bgapi-wifi-wf121",
-    "wifi110": "silabs-bgapi-wifi-wgm110",
+    "ble": "silabs-bgapi-ble1xx",
+    "gecko": "silabs-bgapi-bgm1xx",
+    "dumo": "silabs-bgapi-bt121",
+    "wifi121": "silabs-bgapi-wf121",
+    "wifi110": "silabs-bgapi-wgm110",
 }
 
 # step through each API definition
